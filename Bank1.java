@@ -1,22 +1,29 @@
 package hpack;
 
+import java.util.regex.*;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class Bank1 {
 
 	private JFrame frame;
 	private JTextField UserName;
 	private JPasswordField password;
+	private JTextField var;
 
 	/**
 	 * Launch the application.
@@ -72,6 +79,20 @@ public class Bank1 {
 		frame.getContentPane().add(Password);
 		
 		password = new JPasswordField();
+		password.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				String PATTERN = "^([a-zA-Z0-9@*#]{8,15})$";
+				Pattern patt = Pattern.compile(PATTERN);
+				Matcher match = patt.matcher(password.getText());
+				if(!match.matches()) {
+					var.setText("Password is incorrect");
+				}
+				else {
+					var.setText(null);
+				}
+			}
+		});
 		password.setBounds(152, 81, 96, 20);
 		frame.getContentPane().add(password);
 		
@@ -98,14 +119,26 @@ public class Bank1 {
 			
 			
 			try {
+				FileWriter writer = new FileWriter("Bank.txt", true);
+				writer.write(Name);
+				writer.write(Password);
+				writer.write(Save);
+				writer.write(Dep);
 				
+				writer.close();
+				JOptionPane.showMessageDialog( Button , "Success");
 			}
 			catch(Exception e) {
-				
+				JOptionPane.showMessageDialog(Button, "Failed");
 			}
 			}
 		});
 		Button.setBounds(152, 198, 89, 23);
 		frame.getContentPane().add(Button);
+		
+		var = new JTextField();
+		var.setBounds(280, 79, 86, 20);
+		frame.getContentPane().add(var);
+		var.setColumns(10);
 	}
 }
